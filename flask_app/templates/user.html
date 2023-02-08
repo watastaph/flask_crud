@@ -1,0 +1,72 @@
+<p>
+    Welcome User {{session['user_name']}}
+</p>
+
+<form method="POST" action="/add_user">
+<h4>Registration</h4>
+    <label>Name</label>
+    <input type="text" name="txt-name" placeholder="Enter your name!"><br><br>
+    <label>Email</label>
+    <input type="text" name="txt-email" placeholder="Enter your email!"><br><br>
+    <label>Password</label>
+    <input type="password" name="txt-pword" placeholder="Enter your password!"><br><br>
+    <input type="submit" value="Register!"><br><br>
+</form>
+
+{% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
+    {% if messages %}                            <!-- check if there are any messages -->
+        {% for message in messages %}            <!-- loop through the messages -->
+            <p>{{message}}</p>                   <!-- display each message in a paragraph tag -->
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+
+<table border="1">
+    <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Password</th>
+            <th>Created At</th>
+            <th>Updated At</th>
+            <th>Actions</th>
+    </tr>
+
+
+{% for users in all_user %}
+    <tr>
+        <td>{{users.id}}</td>
+        <td>{{users.name}}</td>
+        <td>{{users.email}}</td>
+        <td>{{users.password}}</td>
+        <td>{{users.created_at}}</td>
+        <td>{{users.updated_at}}</td>
+        <td><a href="/retrieve_user/{{users.id}}">Update</a> | <a href="/delete_user/{{users.id}}">Delete</a></td>
+    </tr>
+{% endfor %}
+
+</table><br>
+
+<h3>Post</h3>
+<table border="1">
+    <tr>
+        <td>Name</td>
+        <td>Post</td>
+        <td>Action</td>
+    </tr>
+{% for posts in all_post%}
+    <tr>
+        <td>{{posts.name}}</td>
+        <td>{{posts.post}}</td>
+        {% if session['user_id']!= posts.users_id  %}
+            <td><a href="/view_post/{{posts.users_id}}">View</a></td>
+        
+        {% else %}
+            <td><a href="/view_post/{{posts.users_id}}">View</a> | <a href="/retrieve_post/{{posts.id}}">Update</a> | <a href="/delete_post/{{posts.id}}">Delete</a></td>
+        {% endif %}
+    </tr>
+{% endfor %}
+
+</table>
+<br><a href="/login">Logout</a>
